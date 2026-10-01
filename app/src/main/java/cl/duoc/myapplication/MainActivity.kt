@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NotariaxmovilTheme {
-
+                Text(text = "Hola mundo papus")
             }
         }
     }
