@@ -22,7 +22,7 @@ import cl.duoc.myapplication.ui.components.ButtonType
 import cl.duoc.myapplication.ui.components.CustomButton
 
 @Composable
-fun MainMenuScreen (
+fun mainMenuScreen (
     onNavigateToLoginScreen: () -> Unit = {},
     onNavigateToNewProcedureScreen: () -> Unit = {},
     onNavigateToStatusScreen: () -> Unit = {},

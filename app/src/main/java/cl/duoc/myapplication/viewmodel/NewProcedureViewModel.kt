@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import cL.duoc.myapplication.model.ProcedureUiState
+import cl.duoc.myapplication.model.ProcedureUiState
 
 class NewProcedureViewModel : ViewModel() {
     
