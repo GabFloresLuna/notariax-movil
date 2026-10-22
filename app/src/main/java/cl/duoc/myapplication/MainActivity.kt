@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cl.duoc.myapplication.ui.screen.MainMenuScreen
 import cl.duoc.myapplication.ui.theme.NotariaxmovilTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,31 +34,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NotariaxmovilTheme {
-                var nombre by remember {mutableStateOf("")}
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ){
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = "Formulario")
-                        Spacer(modifier = Modifier.height(25.dp))
-                        Text(text = "Debes llenar tus datos")
-                        OutlinedTextField(
-                            value = nombre,
-                            onValueChange = {nombre = it},
-                            label = {Text("ingresa nombre")}
-                        )
-                        Spacer(modifier = Modifier.height(60.dp))
-                        Button(onClick = {}) {
-                            Text(text="Crear Usuario")
-                        }
-                        Spacer(modifier = Modifier.height(30.dp))
-                        Text(
-                            text = "Nombre ingresado: $nombre",
-                            modifier = Modifier.background(Red)
-                        )
-                    }
-                }
+                MainMenuScreen()
             }
         }
     }

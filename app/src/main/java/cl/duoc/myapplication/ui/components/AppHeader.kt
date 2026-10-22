@@ -1,5 +1,7 @@
 package cl.duoc.myapplication.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -11,9 +13,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
 
 /**
  * Barra superior (TopAppBar) reutilizable para las pantallas de la app.
@@ -28,11 +36,24 @@ import androidx.compose.ui.text.style.TextOverflow
 fun AppHeader(
     title: String,
     modifier: Modifier = Modifier,
+    logoResId: Int? = null,
     onBackClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
         title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (logoResId != null){
+                    Image(
+                        painter = painterResource(id = logoResId),
+                        contentDescription = "Logo de la aplicación",
+                        modifier = Modifier.size(210.dp)
+                    )
+                }
+            }
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
