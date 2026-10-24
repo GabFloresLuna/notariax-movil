@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cl.duoc.myapplication.ui.screen.Login
+import cl.duoc.myapplication.ui.screen.LoginScreen
 import cl.duoc.myapplication.ui.theme.NotariaxmovilTheme
 
 
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NotariaxmovilTheme {
-                Login()
+                LoginScreen()
 
                 }
             }
