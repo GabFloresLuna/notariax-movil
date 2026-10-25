@@ -1,6 +1,5 @@
 package cl.duoc.myapplication.ui.screen
 
-import android.app.AlertDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -24,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cl.duoc.myapplication.model.LoginUiState
 import cl.duoc.myapplication.ui.components.AppHeader
 import cl.duoc.myapplication.ui.components.ButtonType
 import cl.duoc.myapplication.ui.components.CustomButton
@@ -33,7 +29,9 @@ import cl.duoc.myapplication.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel() //se llama al viewModel de login
+    viewModel: LoginViewModel = viewModel(), //se llama al viewModel de login
+    onBackClick: () -> Unit = {}, //vuelve al menú principal
+    onNavigateToRegisterScreen: () -> Unit = {} //lleva a la creación de usuario
 ) {
 
     val uiState = viewModel.uiState  //conectado con el LoginUiState
@@ -44,7 +42,7 @@ fun LoginScreen(
         topBar = {
             AppHeader(
                 title = "Iniciar Sesión",
-                onBackClick = null
+                onBackClick = onBackClick
             )
         }
     ) { paddingValues ->
@@ -115,7 +113,7 @@ fun LoginScreen(
 
                     CustomButton(
                         text = "Crear usuario",
-                        onClick = { modal = true/* llevar a creacicón de usuario */ },
+                        onClick = onNavigateToRegisterScreen,
                         type = ButtonType.TEXT
                     )
                 }

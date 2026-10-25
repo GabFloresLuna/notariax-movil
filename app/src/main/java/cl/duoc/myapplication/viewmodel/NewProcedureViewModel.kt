@@ -5,12 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import cl.duoc.myapplication.data.repository.ProcedureRepository
+import cl.duoc.myapplication.data.repository.ProcedureRepositoryImpl
 import cl.duoc.myapplication.model.ProcedureUiState
+import cl.duoc.myapplication.validation.Validators
+import com.google.android.gms.maps3d.Validators
+import kotlinx.coroutines.launch
 
-class NewProcedureViewModel : ViewModel() {
-    
+class NewProcedureViewModel(
+    // Inyectamos el repositorio. Si no se pasa uno, usa el impl por defecto.
+    private val repository: ProcedureRepository = ProcedureRepositoryImpl()
+) : ViewModel() {
+
     // Aquí vive el estado
     var uiState by mutableStateOf(ProcedureUiState())
         private set
@@ -38,22 +44,18 @@ class NewProcedureViewModel : ViewModel() {
 
     // Lógica al presionar "Iniciar"
     fun onIniciarClick() {
-        // 1. Validamos (ejemplo básico)
-        var hasError = false
-        var newState = uiState
+        // 1. Validamos (las reglas viven en Validators)
+        val newState = uiState.copy(
+            rutError = Validators.validarRut(uiState.rut),
+            nombreError = Validators.validarNombre(uiState.nombre),
+            apellidoError = Validators.validarNombre(uiState.apellido)
+        )
 
-        if (uiState.rut.isBlank()) {
-            newState = newState.copy(rutError = "El RUT es obligatorio")
-            hasError = true
-        }
-        if (uiState.nombre.isBlank()) {
-            newState = newState.copy(nombreError = "El nombre es obligatorio")
-            hasError = true
-        }
-        if (uiState.apellido.isBlank()) {
-            newState = newState.copy(apellidoError = "El apellido es obligatorio")
-            hasError = true
-        }
+        val hasError = listOf(
+            newState.rutError,
+            newState.nombreError,
+            newState.apellidoError
+        ).any { it != null }
 
         // Si hay errores, actualizamos la UI y cortamos la ejecución
         if (hasError) {
@@ -61,13 +63,31 @@ class NewProcedureViewModel : ViewModel() {
             return
         }
 
-        // 2. Si todo está bien, simulamos la carga
-        uiState = uiState.copy(isLoading = true)
-        
+        // 2. Si todo está bien, creamos el trámite a través del repositorio
+        uiState = uiState.copy(isLoading = true, errorMessage = null)
+
         viewModelScope.launch {
-            delay(1500) // Simulamos conexión a red
-            uiState = uiState.copy(isLoading = false)
-            // Aquí harías la navegación a la siguiente pantalla de éxito
+            val result = repository.createProcedure(
+                rut = uiState.rut,
+                nombre = uiState.nombre,
+                apellido = uiState.apellido,
+                tipoPersona = uiState.tipoPersona,
+                tipoFirma = uiState.tipoFirma
+            )
+
+            if (result.isSuccess) {
+                uiState = uiState.copy(isLoading = false, isSuccess = true)
+            } else {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    errorMessage = result.exceptionOrNull()?.message ?: "Error al crear el trámite"
+                )
+            }
         }
+    }
+
+    // Limpia el formulario una vez confirmado el trámite, para que no reaparezca el modal
+    fun onTramiteConfirmado() {
+        uiState = ProcedureUiState()
     }
 }

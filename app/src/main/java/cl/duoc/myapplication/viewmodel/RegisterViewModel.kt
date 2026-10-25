@@ -63,7 +63,7 @@ class RegisterViewModel(
 
         // Llamada al servidor (Repositorio)
         uiState = uiState.copy(isLoading = true)
-        
+
         viewModelScope.launch {
             val result = repository.registerUser(
                 nombre = uiState.nombre,
@@ -82,5 +82,10 @@ class RegisterViewModel(
                 )
             }
         }
+    }
+
+    // Limpia el formulario una vez confirmado el registro, para que no reaparezca el modal
+    fun onRegistroConfirmado() {
+        uiState = UserUiState()
     }
 }

@@ -10,10 +10,12 @@ package cl.duoc.myapplication.model
  * @param tipoFirma Selección actual entre "Simple" y "Avanzada".
  * 
  * @param rutError Mensaje de error si el RUT es inválido (null si es válido).
- * @param nombreError Mensaje de error si el nombre está vacío.
- * @param apellidoError Mensaje de error si el apellido está vacío.
- * 
+ * @param nombreError Mensaje de error si el nombre es inválido.
+ * @param apellidoError Mensaje de error si el apellido es inválido.
+ * @param errorMessage Mensaje de error general si falla la creación del trámite.
+ *
  * @param isLoading Indica si se está procesando el trámite (para mostrar el loader en el botón).
+ * @param isSuccess Indica si el trámite se creó correctamente (para mostrar el modal de éxito).
  */
 data class ProcedureUiState(
     // --- Datos del formulario ---
@@ -27,7 +29,9 @@ data class ProcedureUiState(
     val rutError: String? = null,
     val nombreError: String? = null,
     val apellidoError: String? = null,
+    val errorMessage: String? = null,
 
     // --- Estado de la UI ---
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isSuccess: Boolean = false
 )

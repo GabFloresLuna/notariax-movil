@@ -18,11 +18,14 @@ import cl.duoc.myapplication.ui.components.AppHeader
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.duoc.myapplication.ui.components.ButtonType
 import cl.duoc.myapplication.ui.components.CustomButton
+import cl.duoc.myapplication.viewmodel.MainViewModel
 
 @Composable
 fun mainMenuScreen (
+    viewModel: MainViewModel = viewModel(),
     onNavigateToLoginScreen: () -> Unit = {},
     onNavigateToNewProcedureScreen: () -> Unit = {},
     onNavigateToStatusScreen: () -> Unit = {},
@@ -32,7 +35,6 @@ fun mainMenuScreen (
         topBar = {
             AppHeader(
                 "Digi Notas",
-                logoResId = R.drawable.logo_editado,
                 onBackClick = null,
                 actions = {
                     IconButton(onClick = onNavigateToLoginScreen){
@@ -57,19 +59,24 @@ fun mainMenuScreen (
             verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Image(
+                painter = painterResource(id=R.drawable.logo_editado),
+                contentDescription = "Logo NotariaX",
+                modifier = Modifier.size(300.dp)
+            )
             CustomButton(
                 text = "Ingresar tramite",
-                type = ButtonType.SECONDARY,
+                type = ButtonType.PRIMARY,
                 onClick = onNavigateToNewProcedureScreen
             )
             CustomButton(
                 text = "Ver estado de tramite",
-                type = ButtonType.SECONDARY,
+                type = ButtonType.PRIMARY,
                 onClick = onNavigateToStatusScreen
             )
             CustomButton(
                 text = "Historial",
-                type = ButtonType.SECONDARY,
+                type = ButtonType.PRIMARY,
                 onClick = onNavigateToOldStatusScreen
             )
         }
