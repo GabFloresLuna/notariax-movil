@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cl.duoc.myapplication.ui.screen.ForgotPasswordScreen
 import cl.duoc.myapplication.ui.screen.LoginScreen
 import cl.duoc.myapplication.ui.screen.NewProcedureScreen
 import cl.duoc.myapplication.ui.screen.RegisterScreen
@@ -21,6 +22,7 @@ object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val NEW_PROCEDURE = "new_procedure"
+    const val FORGOT_PASSWORD = "forgot_password"
 }
 
 private const val DURACION_TRANSICION = 300
@@ -82,7 +84,18 @@ fun appNavigation() {
         composable(Routes.LOGIN) {
             LoginScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToRegisterScreen = { navController.navigate(Routes.REGISTER) }
+                onNavigateToRegisterScreen = { navController.navigate(Routes.REGISTER) },
+                onNavigateToForgotPassword = {
+                    navController.navigate("forgot_password") // <-- Ejecuta la navegación
+                }
+            )
+        }
+
+        composable(Routes.FORGOT_PASSWORD) {
+            ForgotPasswordScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
 

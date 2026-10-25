@@ -1,5 +1,6 @@
 package cl.duoc.myapplication.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -19,23 +21,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.duoc.myapplication.ui.components.AppHeader
 import cl.duoc.myapplication.ui.components.ButtonType
 import cl.duoc.myapplication.ui.components.CustomButton
 import cl.duoc.myapplication.viewmodel.LoginViewModel
+import cl.duoc.myapplication.R
 
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = viewModel(), //se llama al viewModel de login
     onBackClick: () -> Unit = {}, //vuelve al menú principal
-    onNavigateToRegisterScreen: () -> Unit = {} //lleva a la creación de usuario
+    onNavigateToRegisterScreen: () -> Unit = {}, //lleva a la creación de usuario
+    onNavigateToForgotPassword: () -> Unit = {}  //redirecciona a olvidó su contraseña
 ) {
 
     val uiState = viewModel.uiState  //conectado con el LoginUiState
-    var modal by remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -52,9 +56,16 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo_editado),
+                contentDescription = "Logo de Notaría X",
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(bottom = 32.dp)
+            )
 
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(10.dp)
             ) {
 
                 Text(text = "Correo")
@@ -105,7 +116,7 @@ fun LoginScreen(
                 ) {
                     CustomButton(
                         text = "¿Olivdó su contraseña?",
-                        onClick = { modal = true/* llevar a creacicón de usuario */ },
+                        onClick = onNavigateToForgotPassword,
                         type = ButtonType.TEXT
                     )
 

@@ -23,4 +23,7 @@ interface AuthRepository {
         correo: String,
         password: String
     ): Result<Unit>
+
+    //simulación de recuperación de contraseña
+    suspend fun recoverPassword(correo: String): Result<Unit>
 }

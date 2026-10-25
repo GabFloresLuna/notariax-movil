@@ -31,4 +31,16 @@ class AuthRepositoryImpl : AuthRepository {
         usuariosRegistrados[correo] = password
         return Result.success(Unit)
     }
+
+    // Funcion de recuperar contraseña
+    override suspend fun recoverPassword(correo: String): Result<Unit> {
+        delay(1500)
+
+        // validacion
+        return if (usuariosRegistrados.containsKey(correo) || correo == "admin@notaria.cl") {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("No hemos encontrado una cuenta con este correo"))
+        }
+    }
 }
