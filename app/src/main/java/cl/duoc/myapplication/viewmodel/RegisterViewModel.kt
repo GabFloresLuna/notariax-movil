@@ -1,6 +1,5 @@
 package cl.duoc.myapplication.viewmodel
 
-import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import cl.duoc.myapplication.data.repository.AuthRepository
 import cl.duoc.myapplication.data.repository.AuthRepositoryImpl
 import cl.duoc.myapplication.model.UserUiState
+import cl.duoc.myapplication.validation.Validators
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
@@ -36,25 +36,22 @@ class RegisterViewModel(
     }
 
     fun onCrearUsuarioClick() {
-        var hasError = false
-        var newState = uiState
+        // Validaciones locales (las reglas viven en Validators)
+        val newState = uiState.copy(
+            nombreError = Validators.validarNombre(uiState.nombre),
+            apellidosError = Validators.validarNombre(uiState.apellidos),
+            rutError = Validators.validarRut(uiState.rut),
+            correoError = Validators.validarCorreo(uiState.correo),
+            passwordError = Validators.validarPassword(uiState.password)
+        )
 
-        // Validaciones locales
-        if (uiState.nombre.isBlank()) {
-            newState = newState.copy(nombreError = "Campo obligatorio"); hasError = true
-        }
-        if (uiState.apellidos.isBlank()) {
-            newState = newState.copy(apellidosError = "Campo obligatorio"); hasError = true
-        }
-        if (uiState.rut.isBlank()) {
-            newState = newState.copy(rutError = "Campo obligatorio"); hasError = true
-        }
-        if (uiState.correo.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(uiState.correo).matches()) {
-            newState = newState.copy(correoError = "Correo inválido"); hasError = true
-        }
-        if (uiState.password.length < 6) {
-            newState = newState.copy(passwordError = "Mínimo 6 caracteres"); hasError = true
-        }
+        val hasError = listOf(
+            newState.nombreError,
+            newState.apellidosError,
+            newState.rutError,
+            newState.correoError,
+            newState.passwordError
+        ).any { it != null }
 
         if (hasError) {
             uiState = newState

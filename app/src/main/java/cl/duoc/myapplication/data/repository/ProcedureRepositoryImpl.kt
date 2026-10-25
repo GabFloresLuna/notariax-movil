@@ -1,5 +1,6 @@
 package cl.duoc.myapplication.data.repository
 
+import cl.duoc.myapplication.model.Documento
 import cl.duoc.myapplication.model.Procedure
 import cl.duoc.myapplication.model.ProcedureStatus
 import kotlinx.coroutines.delay
@@ -25,18 +26,27 @@ class ProcedureRepositoryImpl : ProcedureRepository {
     }
 
     override suspend fun createProcedure(
-        rut: String, nombre: String, apellido: String, tipoPersona: String, tipoFirma: String
+        rut: String,
+        nombreCompleto: String,
+        tipoPersona: String,
+        tipoFirma: String,
+        direccion: String,
+        representante: String,
+        documentos: List<Documento>
     ): Result<Procedure> {
         delay(2000) // Simulamos que el trámite se está procesando en el servidor
 
         val nuevoTramite = Procedure(
             id = UUID.randomUUID().toString(), // Genera un ID único
             rut = rut,
-            nombreCompleto = "$nombre $apellido",
+            nombreCompleto = nombreCompleto,
             tipoPersona = tipoPersona,
             tipoFirma = tipoFirma,
             estado = ProcedureStatus.PENDIENTE, // Todo trámite nuevo empieza pendiente
-            fechaCreacion = "Hoy" // En una app real usarías LocalDate.now()
+            fechaCreacion = "Hoy", // En una app real usarías LocalDate.now()
+            direccion = direccion,
+            representante = representante,
+            documentos = documentos
         )
 
         tramitesDb.add(0, nuevoTramite) // Lo agregamos al inicio de la lista

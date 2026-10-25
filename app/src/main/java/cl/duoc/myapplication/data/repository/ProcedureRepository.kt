@@ -1,18 +1,22 @@
 package cl.duoc.myapplication.data.repository
 
+import cl.duoc.myapplication.model.Documento
 import cl.duoc.myapplication.model.Procedure
 
 interface ProcedureRepository {
-    
+
     /**
      * Crea un nuevo trámite y lo guarda en el sistema.
+     * Para empresas, nombreCompleto es la razón social y se completan dirección y representante.
      */
     suspend fun createProcedure(
         rut: String,
-        nombre: String,
-        apellido: String,
+        nombreCompleto: String,
         tipoPersona: String,
-        tipoFirma: String
+        tipoFirma: String,
+        direccion: String = "",
+        representante: String = "",
+        documentos: List<Documento> = emptyList()
     ): Result<Procedure>
 
     /**

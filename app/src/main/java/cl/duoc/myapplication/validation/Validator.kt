@@ -14,6 +14,8 @@ object Validators {
     private val formatoCorreo = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
 
     private const val LARGO_MINIMO_PASSWORD = 6
+    private const val LARGO_MINIMO_RAZON_SOCIAL = 2
+    private const val LARGO_MINIMO_DIRECCION = 5
 
     // Sirve para nombre, apellido y apellidos
     fun validarNombre(nombre: String): String? {
@@ -57,6 +59,27 @@ object Validators {
         } else {
             null
         }
+    }
+
+    fun validarRazonSocial(razonSocial: String): String? {
+        return when {
+            razonSocial.isBlank() -> CAMPO_OBLIGATORIO
+            razonSocial.trim().length < LARGO_MINIMO_RAZON_SOCIAL -> "Mínimo $LARGO_MINIMO_RAZON_SOCIAL caracteres"
+            else -> null
+        }
+    }
+
+    fun validarDireccion(direccion: String): String? {
+        return when {
+            direccion.isBlank() -> CAMPO_OBLIGATORIO
+            direccion.trim().length < LARGO_MINIMO_DIRECCION -> "Dirección demasiado corta"
+            else -> null
+        }
+    }
+
+    // Recibe la cantidad de documentos adjuntos
+    fun validarDocumentos(cantidad: Int): String? {
+        return if (cantidad == 0) "Adjunta al menos un documento" else null
     }
 
     // Algoritmo módulo 11 del RUT chileno
