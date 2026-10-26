@@ -6,10 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cl.duoc.myapplication.ui.screen.ForgotPasswordScreen
 import cl.duoc.myapplication.ui.screen.LoginScreen
 import cl.duoc.myapplication.ui.screen.NewProcedureScreen
 import cl.duoc.myapplication.ui.screen.RegisterScreen
+import cl.duoc.myapplication.ui.screen.StatusScreen
 import cl.duoc.myapplication.ui.screen.mainMenuScreen
 import cl.duoc.myapplication.ui.screen.splashScreen
 
@@ -22,7 +22,7 @@ object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val NEW_PROCEDURE = "new_procedure"
-    const val FORGOT_PASSWORD = "forgot_password"
+    const val STATUS = "status"
 }
 
 private const val DURACION_TRANSICION = 300
@@ -77,25 +77,15 @@ fun appNavigation() {
         composable(Routes.MAIN_MENU) {
             mainMenuScreen(
                 onNavigateToLoginScreen = { navController.navigate(Routes.LOGIN) },
-                onNavigateToNewProcedureScreen = { navController.navigate(Routes.NEW_PROCEDURE) }
+                onNavigateToNewProcedureScreen = { navController.navigate(Routes.NEW_PROCEDURE) },
+                onNavigateToStatusScreen = { navController.navigate(Routes.STATUS) }
             )
         }
 
         composable(Routes.LOGIN) {
             LoginScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToRegisterScreen = { navController.navigate(Routes.REGISTER) },
-                onNavigateToForgotPassword = {
-                    navController.navigate("forgot_password") // <-- Ejecuta la navegación
-                }
-            )
-        }
-
-        composable(Routes.FORGOT_PASSWORD) {
-            ForgotPasswordScreen(
-                onBackClick = {
-                    navController.popBackStack()
-                }
+                onNavigateToRegisterScreen = { navController.navigate(Routes.REGISTER) }
             )
         }
 
@@ -110,6 +100,12 @@ fun appNavigation() {
             NewProcedureScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onProcedureCreated = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.STATUS) {
+            StatusScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }
