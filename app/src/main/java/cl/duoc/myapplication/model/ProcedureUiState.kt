@@ -9,6 +9,25 @@ object TipoPersona {
 }
 
 /**
+ * Opciones del tipo de firma del trámite.
+ */
+object TipoFirma {
+    const val SIMPLE = "Simple"
+    const val AVANZADA = "Avanzada"
+}
+
+/**
+ * Mecanismos de firma. La firma simple es manuscrita digital;
+ * los de la firma avanzada se simulan en este MVP.
+ */
+object MecanismoFirma {
+    const val MANUSCRITA = "Firma manuscrita digital"
+    const val E_TOKEN = "E-token"
+    const val CERTIFICADO = "Certificado digital"
+    const val ADQUIRIR = "Adquirir firma electrónica avanzada"
+}
+
+/**
  * Representa el estado de la interfaz de usuario para la pantalla "Ingresar Trámite".
  * Los campos cambian según el tipo de persona:
  * - Persona natural: rut, nombre y apellido.
@@ -21,7 +40,7 @@ object TipoPersona {
  * @param razonSocial Texto ingresado en el campo Razón social (empresa).
  * @param direccion Texto ingresado en el campo Dirección (empresa).
  * @param representante Nombre del representante legal (empresa).
- * @param tipoFirma Selección actual entre "Simple" y "Avanzada".
+ * @param tipoFirma Selección actual entre firma simple y avanzada.
  * @param documentos Documentos adjuntos al trámite (por ejemplo, la hoja del trámite).
  *
  * @param rutError Mensaje de error si el RUT es inválido (null si es válido).
@@ -35,6 +54,7 @@ object TipoPersona {
  *
  * @param isLoading Indica si se está procesando el trámite (para mostrar el loader en el botón).
  * @param isSuccess Indica si el trámite se creó correctamente (para mostrar el modal de éxito).
+ * @param listoParaFirmar Indica que el formulario es válido y se puede pasar a la pantalla de firma.
  */
 data class ProcedureUiState(
     // --- Datos del formulario ---
@@ -45,7 +65,7 @@ data class ProcedureUiState(
     val razonSocial: String = "",
     val direccion: String = "",
     val representante: String = "",
-    val tipoFirma: String = "Simple", // Valor por defecto
+    val tipoFirma: String = TipoFirma.SIMPLE, // Valor por defecto
     val documentos: List<Documento> = emptyList(),
 
     // --- Manejo de errores (Validaciones) ---
@@ -60,5 +80,6 @@ data class ProcedureUiState(
 
     // --- Estado de la UI ---
     val isLoading: Boolean = false,
-    val isSuccess: Boolean = false
+    val isSuccess: Boolean = false,
+    val listoParaFirmar: Boolean = false
 )

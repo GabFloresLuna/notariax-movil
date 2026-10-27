@@ -32,7 +32,8 @@ class ProcedureRepositoryImpl : ProcedureRepository {
         tipoFirma: String,
         direccion: String,
         representante: String,
-        documentos: List<Documento>
+        documentos: List<Documento>,
+        mecanismoFirma: String
     ): Result<Procedure> {
         delay(2000) // Simulamos que el trámite se está procesando en el servidor
 
@@ -46,7 +47,8 @@ class ProcedureRepositoryImpl : ProcedureRepository {
             fechaCreacion = "Hoy", // En una app real usarías LocalDate.now()
             direccion = direccion,
             representante = representante,
-            documentos = documentos
+            documentos = documentos,
+            mecanismoFirma = mecanismoFirma
         )
 
         tramitesDb.add(0, nuevoTramite) // Lo agregamos al inicio de la lista

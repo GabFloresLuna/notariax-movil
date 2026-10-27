@@ -61,6 +61,13 @@ fun ProcedureCard(
                 style = MaterialTheme.typography.bodyMedium
             )
 
+            if (procedure.mecanismoFirma.isNotBlank()) {
+                Text(
+                    text = "Mecanismo: ${procedure.mecanismoFirma}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
             Text(
                 text = "Documentos: ${procedure.documentos.size} · Creado: ${procedure.fechaCreacion}",
                 style = MaterialTheme.typography.bodySmall,
@@ -70,6 +77,7 @@ fun ProcedureCard(
     }
 }
 
+// Etiqueta de color que indica el estado del trámite
 @Composable
 private fun StatusChip(estado: ProcedureStatus) {
     val (colorFondo, colorTexto) = coloresDelEstado(estado)
@@ -96,6 +104,7 @@ private fun etiquetaDelEstado(estado: ProcedureStatus): String {
     }
 }
 
+// Devuelve el par (color de fondo, color de texto) de cada estado
 private fun coloresDelEstado(estado: ProcedureStatus): Pair<Color, Color> {
     return when (estado) {
         ProcedureStatus.PENDIENTE -> Color(0xFFFFE0B2) to Color(0xFF5D4037)

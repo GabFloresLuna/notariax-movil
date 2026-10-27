@@ -16,7 +16,8 @@ interface ProcedureRepository {
         tipoFirma: String,
         direccion: String = "",
         representante: String = "",
-        documentos: List<Documento> = emptyList()
+        documentos: List<Documento> = emptyList(),
+        mecanismoFirma: String = ""
     ): Result<Procedure>
 
     /**
