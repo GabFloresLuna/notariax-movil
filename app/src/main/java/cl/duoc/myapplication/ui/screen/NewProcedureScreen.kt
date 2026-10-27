@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,10 +30,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.duoc.myapplication.model.Documento
+import cl.duoc.myapplication.model.TipoFirma
 import cl.duoc.myapplication.model.TipoPersona
 import cl.duoc.myapplication.ui.components.AppHeader
 import cl.duoc.myapplication.ui.components.ButtonType
@@ -54,12 +50,11 @@ import cl.duoc.myapplication.viewmodel.NewProcedureViewModel
 fun NewProcedureScreen(
     viewModel: NewProcedureViewModel = viewModel(),
     onNavigateBack: () -> Unit,
-    onProcedureCreated: () -> Unit,
+    onNavigateToSignature: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = viewModel.uiState
     val context = LocalContext.current
-    var showSuccessDialog by remember { mutableStateOf(false) }
 
     // Selector de archivos del sistema: no necesita permisos de almacenamiento
     val selectorDeDocumentos = rememberLauncherForActivityResult(
@@ -71,32 +66,12 @@ fun NewProcedureScreen(
         viewModel.onDocumentosSeleccionados(documentos)
     }
 
-    LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess) {
-            showSuccessDialog = true
+    // Cuando el formulario es válido, se pasa a la pantalla de firma que corresponde
+    LaunchedEffect(state.listoParaFirmar) {
+        if (state.listoParaFirmar) {
+            viewModel.onFirmaIniciada()
+            onNavigateToSignature(state.tipoFirma)
         }
-    }
-
-    // Modal que confirma que el trámite fue creado
-    if (showSuccessDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                showSuccessDialog = false
-            },
-            title = { Text(text = "¡Trámite ingresado!") },
-            text = { Text(text = "Tu trámite fue creado y quedó en estado pendiente de revisión.") },
-            confirmButton = {
-                CustomButton(
-                    text = "Aceptar",
-                    onClick = {
-                        showSuccessDialog = false
-                        viewModel.onTramiteConfirmado()
-                        onProcedureCreated()
-                    },
-                    type = ButtonType.SECONDARY
-                )
-            }
-        )
     }
 
     Scaffold(
@@ -251,26 +226,17 @@ fun NewProcedureScreen(
             )
 
             CustomRadioGroup(
-                options = listOf("Simple", "Avanzada"),
+                options = listOf(TipoFirma.SIMPLE, TipoFirma.AVANZADA),
                 selectedOption = state.tipoFirma,
                 onOptionSelected = { viewModel.onTipoFirmaChange(it) }
             )
-
-            if (state.errorMessage != null) {
-                Text(
-                    text = state.errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             CustomButton(
                 text = "Iniciar",
                 onClick = { viewModel.onIniciarClick() },
-                type = ButtonType.PRIMARY,
-                isLoading = state.isLoading
+                type = ButtonType.PRIMARY
             )
         }
     }

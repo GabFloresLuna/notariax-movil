@@ -81,12 +81,12 @@ class NewProcedureViewModel(
         uiState = uiState.copy(documentos = uiState.documentos - documento)
     }
 
-    // Lógica al presionar "Iniciar"
+    // Lógica al presionar "Iniciar": valida el formulario antes de pasar a la firma
     fun onIniciarClick() {
         val esEmpresa = uiState.tipoPersona == TipoPersona.EMPRESA
 
-        // 1. Validamos solo los campos que corresponden al tipo de persona
-        //    (las reglas viven en Validators)
+        // Validamos solo los campos que corresponden al tipo de persona
+        // (las reglas viven en Validators)
         val estadoConDocumentos = uiState.copy(
             documentosError = Validators.validarDocumentos(uiState.documentos.size)
         )
@@ -122,7 +122,19 @@ class NewProcedureViewModel(
             return
         }
 
-        // 2. Si todo está bien, creamos el trámite a través del repositorio
+        // 2. Si todo está bien, se pasa a la pantalla de firma
+        uiState = newState.copy(listoParaFirmar = true)
+    }
+
+    // La pantalla ya navegó a la firma, se baja la bandera para no repetir la navegación
+    fun onFirmaIniciada() {
+        uiState = uiState.copy(listoParaFirmar = false)
+    }
+
+    // Se llama cuando el usuario terminó de firmar: aquí recién se crea el trámite
+    fun onFirmaCompletada(mecanismoFirma: String) {
+        val esEmpresa = uiState.tipoPersona == TipoPersona.EMPRESA
+
         uiState = uiState.copy(isLoading = true, errorMessage = null)
 
         viewModelScope.launch {
@@ -139,7 +151,8 @@ class NewProcedureViewModel(
                 tipoFirma = uiState.tipoFirma,
                 direccion = uiState.direccion,
                 representante = uiState.representante,
-                documentos = uiState.documentos
+                documentos = uiState.documentos,
+                mecanismoFirma = mecanismoFirma
             )
 
             if (result.isSuccess) {

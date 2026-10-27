@@ -3,15 +3,21 @@ package cl.duoc.myapplication.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cl.duoc.myapplication.model.TipoFirma
+import cl.duoc.myapplication.ui.screen.AdvancedSignatureScreen
+import cl.duoc.myapplication.ui.screen.SimpleSignatureScreen
 import cl.duoc.myapplication.ui.screen.LoginScreen
 import cl.duoc.myapplication.ui.screen.NewProcedureScreen
 import cl.duoc.myapplication.ui.screen.RegisterScreen
 import cl.duoc.myapplication.ui.screen.StatusScreen
 import cl.duoc.myapplication.ui.screen.mainMenuScreen
 import cl.duoc.myapplication.ui.screen.splashScreen
+import cl.duoc.myapplication.viewmodel.NewProcedureViewModel
 
 /**
  * Rutas de todas las pantallas de la app.
@@ -23,6 +29,8 @@ object Routes {
     const val REGISTER = "register"
     const val NEW_PROCEDURE = "new_procedure"
     const val STATUS = "status"
+    const val SIMPLE_SIGNATURE = "simple_signature"
+    const val ADVANCED_SIGNATURE = "advanced_signature"
 }
 
 private const val DURACION_TRANSICION = 300
@@ -99,7 +107,41 @@ fun appNavigation() {
         composable(Routes.NEW_PROCEDURE) {
             NewProcedureScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onProcedureCreated = { navController.popBackStack() }
+                onNavigateToSignature = { tipoFirma ->
+                    val signatureRoute = if (tipoFirma == TipoFirma.AVANZADA) {
+                        Routes.ADVANCED_SIGNATURE
+                    } else {
+                        Routes.SIMPLE_SIGNATURE
+                    }
+                    navController.navigate(signatureRoute)
+                }
+            )
+        }
+
+        composable(Routes.SIMPLE_SIGNATURE) { backStackEntry ->
+            // Se comparte el ViewModel del formulario para usar sus datos al crear el trámite
+            val procedureViewModel: NewProcedureViewModel = viewModel(
+                viewModelStoreOwner = remember(backStackEntry) {
+                    navController.getBackStackEntry(Routes.NEW_PROCEDURE)
+                }
+            )
+            SimpleSignatureScreen(
+                procedureViewModel = procedureViewModel,
+                onNavigateBack = { navController.popBackStack() },
+                onProcedureCreated = { navController.popBackStack(Routes.MAIN_MENU, inclusive = false) }
+            )
+        }
+
+        composable(Routes.ADVANCED_SIGNATURE) { backStackEntry ->
+            val procedureViewModel: NewProcedureViewModel = viewModel(
+                viewModelStoreOwner = remember(backStackEntry) {
+                    navController.getBackStackEntry(Routes.NEW_PROCEDURE)
+                }
+            )
+            AdvancedSignatureScreen(
+                procedureViewModel = procedureViewModel,
+                onNavigateBack = { navController.popBackStack() },
+                onProcedureCreated = { navController.popBackStack(Routes.MAIN_MENU, inclusive = false) }
             )
         }
 

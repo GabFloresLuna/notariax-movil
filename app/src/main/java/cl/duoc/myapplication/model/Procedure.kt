@@ -13,7 +13,8 @@ data class Procedure(
     val fechaCreacion: String, // Podría ser un LocalDate si usas java.time
     val direccion: String = "", // Solo se completa para empresas
     val representante: String = "", // Solo se completa para empresas
-    val documentos: List<Documento> = emptyList() // Documentos adjuntos al trámite
+    val documentos: List<Documento> = emptyList(), // Documentos adjuntos al trámite
+    val mecanismoFirma: String = "" // Cómo se firmó (ej: firma manuscrita digital, e-token simulado)
 )
 
 /**
