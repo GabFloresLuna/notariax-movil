@@ -69,7 +69,9 @@ public fun RegisterScreen(
                 .padding(16.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-        ) {}
+        ) {
+            
+        }
 
     }
 }
