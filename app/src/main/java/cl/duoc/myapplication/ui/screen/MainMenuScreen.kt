@@ -22,6 +22,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.duoc.myapplication.ui.components.ButtonType
 import cl.duoc.myapplication.ui.components.CustomButton
 import cl.duoc.myapplication.viewmodel.MainViewModel
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 @Composable
 fun mainMenuScreen (
@@ -31,21 +40,52 @@ fun mainMenuScreen (
     onNavigateToStatusScreen: () -> Unit = {},
     onNavigateToOldStatusScreen: () -> Unit = {}
 ) {
+    val uiState = viewModel.uiState
+    var menuAbierto by remember { mutableStateOf(false) }
+
+    // Cada vez que se muestra el menú, se revisa si hay sesión guardada en Room
+    LaunchedEffect(Unit) {
+        viewModel.cargarSesion()
+    }
+
     Scaffold(
         topBar = {
             AppHeader(
                 "Digi Notas",
                 onBackClick = null,
                 actions = {
-                    IconButton(onClick = onNavigateToLoginScreen){
-                        Image(
-                            painter = painterResource(id=R.drawable.icono_login),
-                            contentDescription = "Perfil / Login",
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
+                    Box {
+                        // Si hay sesión abre el menú del perfil, si no va al login
+                        IconButton(onClick = {
+                            if (uiState.estaLogueado) menuAbierto = true
+                            else onNavigateToLoginScreen()
+                        }){
+                            Image(
+                                painter = painterResource(id=R.drawable.icono_login),
+                                contentDescription = "Perfil / Login",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = menuAbierto,
+                            onDismissRequest = { menuAbierto = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(uiState.nombreUsuario) },
+                                onClick = {},
+                                enabled = false
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Cerrar sesión") },
+                                onClick = {
+                                    menuAbierto = false
+                                    viewModel.onLogoutClick()
+                                }
+                            )
+                        }
                     }
                 }
             )
