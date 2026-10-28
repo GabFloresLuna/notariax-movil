@@ -43,7 +43,6 @@ fun mainMenuScreen (
     val uiState = viewModel.uiState
     var menuAbierto by remember { mutableStateOf(false) }
 
-    // Cada vez que se muestra el menú, se revisa si hay sesión guardada en Room
     LaunchedEffect(Unit) {
         viewModel.cargarSesion()
     }
@@ -55,7 +54,6 @@ fun mainMenuScreen (
                 onBackClick = null,
                 actions = {
                     Box {
-                        // Si hay sesión abre el menú del perfil, si no va al login
                         IconButton(onClick = {
                             if (uiState.estaLogueado) menuAbierto = true
                             else onNavigateToLoginScreen()

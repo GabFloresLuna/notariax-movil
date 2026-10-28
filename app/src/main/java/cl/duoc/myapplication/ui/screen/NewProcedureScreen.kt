@@ -56,7 +56,6 @@ fun NewProcedureScreen(
     val state = viewModel.uiState
     val context = LocalContext.current
 
-    // Selector de archivos del sistema: no necesita permisos de almacenamiento
     val selectorDeDocumentos = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenMultipleDocuments()
     ) { uris ->
@@ -66,7 +65,6 @@ fun NewProcedureScreen(
         viewModel.onDocumentosSeleccionados(documentos)
     }
 
-    // Cuando el formulario es válido, se pasa a la pantalla de firma que corresponde
     LaunchedEffect(state.listoParaFirmar) {
         if (state.listoParaFirmar) {
             viewModel.onFirmaIniciada()
@@ -94,7 +92,6 @@ fun NewProcedureScreen(
                 onOptionSelected = { viewModel.onTipoPersonaChange(it) }
             )
 
-            // Los campos cambian (con animación) según el tipo de persona
             AnimatedContent(
                 targetState = state.tipoPersona,
                 label = "camposSegunTipoPersona"
@@ -242,7 +239,6 @@ fun NewProcedureScreen(
     }
 }
 
-// Obtiene el nombre del archivo elegido a partir de su uri
 private fun obtenerNombreArchivo(context: Context, uri: Uri): String {
     context.contentResolver.query(
         uri,

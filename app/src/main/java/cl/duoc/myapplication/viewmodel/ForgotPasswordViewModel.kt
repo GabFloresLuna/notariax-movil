@@ -11,7 +11,6 @@ import cl.duoc.myapplication.model.ForgotPasswordUiState
 import kotlinx.coroutines.launch
 
 class ForgotPasswordViewModel(
-    // Inyectamos el repositorio
     private val repository: AuthRepository = AuthRepositoryImpl()
 ) : ViewModel() {
 
@@ -31,7 +30,6 @@ class ForgotPasswordViewModel(
         uiState = uiState.copy(isLoading = true)
 
         viewModelScope.launch {
-            // Llamamos a tu base de datos local
             val result = repository.recoverPassword(uiState.correo)
 
             if (result.isSuccess) {

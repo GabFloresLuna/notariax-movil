@@ -9,11 +9,9 @@ import cl.duoc.myapplication.model.SimpleSignatureUiState
 
 class SimpleSignatureViewModel : ViewModel() {
 
-    // El estado de la pantalla
     var uiState by mutableStateOf(SimpleSignatureUiState())
         private set
 
-    // El usuario apoyó el dedo: empieza un trazo nuevo
     fun onTrazoIniciado(punto: Offset) {
         uiState = uiState.copy(
             trazos = uiState.trazos + listOf(listOf(punto)),
@@ -21,7 +19,6 @@ class SimpleSignatureViewModel : ViewModel() {
         )
     }
 
-    // El usuario arrastra el dedo: se agrega el punto al último trazo
     fun onTrazoContinuado(punto: Offset) {
         if (uiState.trazos.isEmpty()) return
 
@@ -33,7 +30,6 @@ class SimpleSignatureViewModel : ViewModel() {
         uiState = uiState.copy(trazos = emptyList(), errorMessage = null)
     }
 
-    // Devuelve true si hay una firma dibujada
     fun validarFirma(): Boolean {
         if (uiState.trazos.isEmpty()) {
             uiState = uiState.copy(errorMessage = "Dibuja tu firma para continuar")

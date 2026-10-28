@@ -14,9 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,16 +30,15 @@ import cl.duoc.myapplication.R
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(), //se llama al viewModel de login
-    onBackClick: () -> Unit = {}, //vuelve al menú principal
-    onNavigateToRegisterScreen: () -> Unit = {}, //lleva a la creación de usuario
-    onNavigateToForgotPassword: () -> Unit = {},  //redirecciona a olvidó su contraseña
-    onLoginSuccess: () -> Unit = {} //vuelve al menú cuando el login es correcto
+    viewModel: LoginViewModel = viewModel(),
+    onBackClick: () -> Unit = {},
+    onNavigateToRegisterScreen: () -> Unit = {},
+    onNavigateToForgotPassword: () -> Unit = {},
+    onLoginSuccess: () -> Unit = {}
 ) {
 
     val uiState = viewModel.uiState  //conectado con el LoginUiState
 
-    // Cuando el login es correcto, se avisa a la navegación
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) onLoginSuccess()
     }

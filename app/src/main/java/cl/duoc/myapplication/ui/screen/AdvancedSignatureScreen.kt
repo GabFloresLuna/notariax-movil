@@ -38,7 +38,6 @@ fun AdvancedSignatureScreen(
     val state = viewModel.uiState
     val procedureState = procedureViewModel.uiState
 
-    // Modal que confirma que el trámite fue firmado y enviado
     if (procedureState.isSuccess) {
         AlertDialog(
             onDismissRequest = {},
@@ -148,8 +147,6 @@ fun AdvancedSignatureScreen(
         }
     }
 }
-
-// Texto que explica cada mecanismo, dejando claro que en este MVP se simulan
 private fun descripcionDelMecanismo(mecanismo: String): String {
     return when (mecanismo) {
         MecanismoFirma.E_TOKEN ->

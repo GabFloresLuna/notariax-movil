@@ -42,7 +42,6 @@ fun SimpleSignatureScreen(
     val procedureState = procedureViewModel.uiState
     val colorTrazo = MaterialTheme.colorScheme.onSurface
 
-    // Modal que confirma que el trámite fue firmado y enviado
     if (procedureState.isSuccess) {
         AlertDialog(
             onDismissRequest = {},
@@ -81,7 +80,7 @@ fun SimpleSignatureScreen(
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            // Recuadro donde se dibuja la firma
+            // Recuadro donde sera dibujada la firma
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()

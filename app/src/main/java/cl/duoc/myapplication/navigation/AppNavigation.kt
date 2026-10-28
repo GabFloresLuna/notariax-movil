@@ -123,7 +123,6 @@ fun appNavigation() {
         }
 
         composable(Routes.SIMPLE_SIGNATURE) { backStackEntry ->
-            // Se comparte el ViewModel del formulario para usar sus datos al crear el trámite
             val procedureViewModel: NewProcedureViewModel = viewModel(
                 viewModelStoreOwner = remember(backStackEntry) {
                     navController.getBackStackEntry(Routes.NEW_PROCEDURE)

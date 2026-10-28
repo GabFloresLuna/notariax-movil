@@ -17,10 +17,6 @@ class MainViewModel(
     var uiState by mutableStateOf(MainMenuUiState())
         private set
 
-    /**
-     * Revisa en Room si hay un usuario con sesión abierta.
-     * Se llama cada vez que se muestra el menú.
-     */
     fun cargarSesion() {
         uiState = uiState.copy(isLoading = true)
 
@@ -35,9 +31,6 @@ class MainViewModel(
         }
     }
 
-    /**
-     * Cierra la sesión guardada en el teléfono.
-     */
     fun onLogoutClick() {
         viewModelScope.launch {
             repository.logout()

@@ -12,7 +12,7 @@ import cl.duoc.myapplication.model.ProcedureStatus
 import kotlinx.coroutines.launch
 
 class StatusViewModel(
-    // Inyectamos el repositorio. Si no se pasa uno, usa el impl por defecto.
+    // Se usa el repositorio, en caso tal de estar vacio se usa el Impl
     private val repository: ProcedureRepository = ProcedureRepositoryImpl()
 ) : ViewModel() {
 
@@ -20,7 +20,7 @@ class StatusViewModel(
     var uiState by mutableStateOf(HistoryUiState())
         private set
 
-    // Esta pantalla solo muestra los trámites que aún están en curso
+    // Tramites en curso
     private val estadosEnCurso = listOf(ProcedureStatus.PENDIENTE, ProcedureStatus.EN_REVISION)
 
     // Se carga automáticamente al entrar a la pantalla

@@ -14,21 +14,15 @@ import cl.duoc.myapplication.validation.Validators
 import kotlinx.coroutines.launch
 
 class NewProcedureViewModel(
-    // Inyectamos el repositorio. Si no se pasa uno, usa el impl por defecto.
     private val repository: ProcedureRepository = ProcedureRepositoryImpl()
 ) : ViewModel() {
 
-    // Aquí vive el estado
     var uiState by mutableStateOf(ProcedureUiState())
         private set
 
-    // Funciones para actualizar los campos
     fun onTipoPersonaChange(tipo: String) {
         if (tipo == uiState.tipoPersona) return
 
-        // Los campos de una persona natural y de una empresa son distintos,
-        // por eso se limpia el formulario al cambiar de tipo.
-        // La firma y los documentos adjuntos se conservan.
         uiState = ProcedureUiState(
             tipoPersona = tipo,
             tipoFirma = uiState.tipoFirma,
@@ -37,7 +31,7 @@ class NewProcedureViewModel(
     }
 
     fun onRutChange(rut: String) {
-        uiState = uiState.copy(rut = rut, rutError = null) // Limpiamos el error al escribir
+        uiState = uiState.copy(rut = rut, rutError = null)
     }
 
     fun onNombreChange(nombre: String) {
@@ -64,7 +58,6 @@ class NewProcedureViewModel(
         uiState = uiState.copy(tipoFirma = firma)
     }
 
-    // Agrega los documentos elegidos, sin repetir los que ya estaban
     fun onDocumentosSeleccionados(nuevosDocumentos: List<Documento>) {
         val documentosActuales = uiState.documentos
         val documentosAgregados = nuevosDocumentos.filter { nuevo ->
@@ -81,12 +74,9 @@ class NewProcedureViewModel(
         uiState = uiState.copy(documentos = uiState.documentos - documento)
     }
 
-    // Lógica al presionar "Iniciar": valida el formulario antes de pasar a la firma
     fun onIniciarClick() {
         val esEmpresa = uiState.tipoPersona == TipoPersona.EMPRESA
 
-        // Validamos solo los campos que corresponden al tipo de persona
-        // (las reglas viven en Validators)
         val estadoConDocumentos = uiState.copy(
             documentosError = Validators.validarDocumentos(uiState.documentos.size)
         )
@@ -116,22 +106,18 @@ class NewProcedureViewModel(
             newState.documentosError
         ).any { it != null }
 
-        // Si hay errores, actualizamos la UI y cortamos la ejecución
         if (hasError) {
             uiState = newState
             return
         }
 
-        // 2. Si todo está bien, se pasa a la pantalla de firma
         uiState = newState.copy(listoParaFirmar = true)
     }
 
-    // La pantalla ya navegó a la firma, se baja la bandera para no repetir la navegación
     fun onFirmaIniciada() {
         uiState = uiState.copy(listoParaFirmar = false)
     }
 
-    // Se llama cuando el usuario terminó de firmar: aquí recién se crea el trámite
     fun onFirmaCompletada(mecanismoFirma: String) {
         val esEmpresa = uiState.tipoPersona == TipoPersona.EMPRESA
 
@@ -166,7 +152,6 @@ class NewProcedureViewModel(
         }
     }
 
-    // Limpia el formulario una vez confirmado el trámite, para que no reaparezca el modal
     fun onTramiteConfirmado() {
         uiState = ProcedureUiState()
     }

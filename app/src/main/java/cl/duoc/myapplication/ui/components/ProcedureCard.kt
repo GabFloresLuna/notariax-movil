@@ -77,7 +77,6 @@ fun ProcedureCard(
     }
 }
 
-// Etiqueta de color que indica el estado del trámite
 @Composable
 private fun StatusChip(estado: ProcedureStatus) {
     val (colorFondo, colorTexto) = coloresDelEstado(estado)
@@ -104,7 +103,6 @@ private fun etiquetaDelEstado(estado: ProcedureStatus): String {
     }
 }
 
-// Devuelve el par (color de fondo, color de texto) de cada estado
 private fun coloresDelEstado(estado: ProcedureStatus): Pair<Color, Color> {
     return when (estado) {
         ProcedureStatus.PENDIENTE -> Color(0xFFFFE0B2) to Color(0xFF5D4037)

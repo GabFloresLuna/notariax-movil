@@ -1,10 +1,5 @@
 package cl.duoc.myapplication.validation
 
-/**
- * Reglas de validación centralizadas para los formularios de la app.
- * No depende de la interfaz: cada función devuelve el mensaje de error,
- * o null si el valor es válido.
- */
 object Validators {
 
     private const val CAMPO_OBLIGATORIO = "Campo obligatorio"
@@ -17,7 +12,6 @@ object Validators {
     private const val LARGO_MINIMO_RAZON_SOCIAL = 2
     private const val LARGO_MINIMO_DIRECCION = 5
 
-    // Sirve para nombre, apellido y apellidos
     fun validarNombre(nombre: String): String? {
         return when {
             nombre.isBlank() -> CAMPO_OBLIGATORIO
@@ -27,7 +21,6 @@ object Validators {
         }
     }
 
-    // Acepta el RUT con o sin puntos y con o sin guión (12.345.678-5, 12345678-5 o 123456785)
     fun validarRut(rut: String): String? {
         if (rut.isBlank()) return CAMPO_OBLIGATORIO
 
@@ -77,12 +70,10 @@ object Validators {
         }
     }
 
-    // Recibe la cantidad de documentos adjuntos
     fun validarDocumentos(cantidad: Int): String? {
         return if (cantidad == 0) "Adjunta al menos un documento" else null
     }
 
-    // Algoritmo módulo 11 del RUT chileno
     private fun calcularDigitoVerificador(cuerpo: String): Char {
         var suma = 0
         var multiplicador = 2
