@@ -36,10 +36,16 @@ fun LoginScreen(
     viewModel: LoginViewModel = viewModel(), //se llama al viewModel de login
     onBackClick: () -> Unit = {}, //vuelve al menú principal
     onNavigateToRegisterScreen: () -> Unit = {}, //lleva a la creación de usuario
-    onNavigateToForgotPassword: () -> Unit = {}  //redirecciona a olvidó su contraseña
+    onNavigateToForgotPassword: () -> Unit = {},  //redirecciona a olvidó su contraseña
+    onLoginSuccess: () -> Unit = {} //vuelve al menú cuando el login es correcto
 ) {
 
     val uiState = viewModel.uiState  //conectado con el LoginUiState
+
+    // Cuando el login es correcto, se avisa a la navegación
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) onLoginSuccess()
+    }
 
 
     Scaffold(

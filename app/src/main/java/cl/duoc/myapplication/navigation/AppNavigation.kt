@@ -93,7 +93,8 @@ fun appNavigation() {
         composable(Routes.LOGIN) {
             LoginScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToRegisterScreen = { navController.navigate(Routes.REGISTER) }
+                onNavigateToRegisterScreen = { navController.navigate(Routes.REGISTER) },
+                onLoginSuccess = { navController.popBackStack(Routes.MAIN_MENU, inclusive = false) }
             )
         }
 

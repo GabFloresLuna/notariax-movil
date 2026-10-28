@@ -26,4 +26,10 @@ interface AuthRepository {
 
     //simulación de recuperación de contraseña
     suspend fun recoverPassword(correo: String): Result<Unit>
+
+    // Devuelve el correo del usuario con sesión abierta, o null si no hay nadie
+    suspend fun getUsuarioLogueado(): String?
+
+    // Cierra la sesión guardada en el teléfono
+    suspend fun logout()
 }
