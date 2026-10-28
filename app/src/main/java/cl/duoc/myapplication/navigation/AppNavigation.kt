@@ -13,6 +13,7 @@ import cl.duoc.myapplication.ui.screen.AdvancedSignatureScreen
 import cl.duoc.myapplication.ui.screen.SimpleSignatureScreen
 import cl.duoc.myapplication.ui.screen.LoginScreen
 import cl.duoc.myapplication.ui.screen.NewProcedureScreen
+import cl.duoc.myapplication.ui.screen.OldStatusScreen
 import cl.duoc.myapplication.ui.screen.RegisterScreen
 import cl.duoc.myapplication.ui.screen.StatusScreen
 import cl.duoc.myapplication.ui.screen.mainMenuScreen
@@ -29,6 +30,7 @@ object Routes {
     const val REGISTER = "register"
     const val NEW_PROCEDURE = "new_procedure"
     const val STATUS = "status"
+    const val OLD_STATUS = "old_status"
     const val SIMPLE_SIGNATURE = "simple_signature"
     const val ADVANCED_SIGNATURE = "advanced_signature"
 }
@@ -86,7 +88,8 @@ fun appNavigation() {
             mainMenuScreen(
                 onNavigateToLoginScreen = { navController.navigate(Routes.LOGIN) },
                 onNavigateToNewProcedureScreen = { navController.navigate(Routes.NEW_PROCEDURE) },
-                onNavigateToStatusScreen = { navController.navigate(Routes.STATUS) }
+                onNavigateToStatusScreen = { navController.navigate(Routes.STATUS) },
+                onNavigateToOldStatusScreen = { navController.navigate(Routes.OLD_STATUS) }
             )
         }
 
@@ -148,6 +151,12 @@ fun appNavigation() {
 
         composable(Routes.STATUS) {
             StatusScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.OLD_STATUS) {
+            OldStatusScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
