@@ -2,57 +2,56 @@ package cl.duoc.myapplication.data.repository
 
 import cl.duoc.myapplication.data.local.AppDatabase
 import cl.duoc.myapplication.data.local.UsuarioEntity
+import cl.duoc.myapplication.data.remote.RetrofitInstance
+import cl.duoc.myapplication.model.LoginRequest
+import cl.duoc.myapplication.model.SignupRequest
 import kotlinx.coroutines.delay
+import retrofit2.HttpException
+import java.io.IOException
 
 class AuthRepositoryImpl : AuthRepository {
 
+    // Room ahora solo guarda quién tiene la sesión abierta
     private val usuarioDao = AppDatabase.instancia!!.usuarioDao()
 
-    private suspend fun crearUsuariosDePrueba() {
-        if (usuarioDao.buscarPorCorreo("admin@notaria.cl") == null) {
-            usuarioDao.insertar(UsuarioEntity("admin@notaria.cl", "123456"))
-        }
-        if (usuarioDao.buscarPorCorreo("usuario@gmail.com") == null) {
-            usuarioDao.insertar(UsuarioEntity("usuario@gmail.com", "1234"))
-        }
-    }
-
     override suspend fun login(correo: String, password: String): Result<Unit> {
-        delay(1500)
-        crearUsuariosDePrueba()
-
-        val usuario = usuarioDao.buscarPorCorreo(correo)
-
-        return if (usuario != null && usuario.password == password) {
-            usuarioDao.insertar(usuario.copy(logueado = true))
+        return try {
+            RetrofitInstance.api.login(LoginRequest(email = correo, password = password))
+            // Guardamos la sesión abierta (la contraseña no se guarda)
+            usuarioDao.insertar(UsuarioEntity(correo = correo, password = "", logueado = true))
             Result.success(Unit)
-        } else {
+        } catch (e: HttpException) {
             Result.failure(Exception("Correo o contraseña incorrectos"))
+        } catch (e: IOException) {
+            Result.failure(Exception("Sin conexión con el servidor"))
         }
     }
 
     override suspend fun registerUser(
         nombre: String, apellidos: String, rut: String, correo: String, password: String
     ): Result<Unit> {
-        delay(1500)
-
-        if (usuarioDao.buscarPorCorreo(correo) != null) {
-            return Result.failure(Exception("Este correo ya está registrado"))
+        return try {
+            RetrofitInstance.api.signup(
+                SignupRequest(
+                    name = nombre,
+                    apellidos = apellidos,
+                    rut = rut,
+                    email = correo,
+                    password = password
+                )
+            )
+            Result.success(Unit)
+        } catch (e: HttpException) {
+            Result.failure(Exception("Este correo ya está registrado"))
+        } catch (e: IOException) {
+            Result.failure(Exception("Sin conexión con el servidor"))
         }
-
-        usuarioDao.insertar(UsuarioEntity(correo = correo, password = password))
-        return Result.success(Unit)
     }
 
+    // Recuperar contraseña sigue siendo una simulación
     override suspend fun recoverPassword(correo: String): Result<Unit> {
         delay(1500)
-        crearUsuariosDePrueba()
-
-        return if (usuarioDao.buscarPorCorreo(correo) != null) {
-            Result.success(Unit)
-        } else {
-            Result.failure(Exception("No hemos encontrado una cuenta con este correo"))
-        }
+        return Result.success(Unit)
     }
 
     override suspend fun getUsuarioLogueado(): String? {
