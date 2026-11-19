@@ -11,7 +11,7 @@ import cl.duoc.myapplication.ui.theme.NotariaxmovilTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppDatabase.getDatabase(this) // Se inicia la base de datos local (Room)
+        AppDatabase.getDatabase(this)
         enableEdgeToEdge()
         setContent {
             NotariaxmovilTheme {

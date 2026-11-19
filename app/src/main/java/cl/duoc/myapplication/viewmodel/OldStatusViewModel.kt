@@ -12,18 +12,14 @@ import cl.duoc.myapplication.model.ProcedureStatus
 import kotlinx.coroutines.launch
 
 class OldStatusViewModel(
-    // Inyectamos el repositorio. Si no se pasa uno, usa el impl por defecto.
     private val repository: ProcedureRepository = ProcedureRepositoryImpl()
 ) : ViewModel() {
 
-    // El estado de la pantalla
     var uiState by mutableStateOf(HistoryUiState())
         private set
 
-    // El historial solo muestra los trámites que ya terminaron su proceso
     private val estadosFinalizados = listOf(ProcedureStatus.APROBADO, ProcedureStatus.RECHAZADO)
 
-    // Se carga automáticamente al entrar a la pantalla
     init {
         loadHistory()
     }

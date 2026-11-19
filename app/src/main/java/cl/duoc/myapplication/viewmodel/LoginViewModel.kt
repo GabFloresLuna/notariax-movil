@@ -11,11 +11,9 @@ import cl.duoc.myapplication.model.LoginUiState
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    // Inyectamos el repositorio. Si no se pasa uno, usa el impl por defecto.
     private val repository: AuthRepository = AuthRepositoryImpl()
 ) : ViewModel() {
 
-    // El estado de la pantalla
     var uiState by mutableStateOf(LoginUiState())
         private set
 
@@ -28,7 +26,6 @@ class LoginViewModel(
     }
 
     fun onLoginClick() {
-        // 1. Validaciones locales (antes de llamar al servidor)
         var hasError = false
         var newState = uiState
 
@@ -46,7 +43,6 @@ class LoginViewModel(
             return
         }
 
-        // 2. Llamada al repositorio
         uiState = uiState.copy(isLoading = true)
         
         viewModelScope.launch {

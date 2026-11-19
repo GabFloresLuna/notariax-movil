@@ -18,7 +18,6 @@ class RegisterViewModel(
     var uiState by mutableStateOf(UserUiState())
         private set
 
-    // Funciones de actualización
     fun onNombreChange(nombre: String) {
         uiState = uiState.copy(nombre = nombre, nombreError = null)
     }
@@ -36,7 +35,6 @@ class RegisterViewModel(
     }
 
     fun onCrearUsuarioClick() {
-        // Validaciones locales (las reglas viven en Validators)
         val newState = uiState.copy(
             nombreError = Validators.validarNombre(uiState.nombre),
             apellidosError = Validators.validarNombre(uiState.apellidos),
@@ -58,7 +56,6 @@ class RegisterViewModel(
             return
         }
 
-        // Llamada al servidor (Repositorio)
         uiState = uiState.copy(isLoading = true)
 
         viewModelScope.launch {
@@ -75,13 +72,12 @@ class RegisterViewModel(
             } else {
                 uiState = uiState.copy(
                     isLoading = false,
-                    correoError = result.exceptionOrNull()?.message // Mostramos el error en el correo
+                    correoError = result.exceptionOrNull()?.message
                 )
             }
         }
     }
 
-    // Limpia el formulario una vez confirmado el registro, para que no reaparezca el modal
     fun onRegistroConfirmado() {
         uiState = UserUiState()
     }

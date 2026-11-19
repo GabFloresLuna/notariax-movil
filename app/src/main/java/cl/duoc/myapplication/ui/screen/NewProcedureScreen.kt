@@ -30,11 +30,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.duoc.myapplication.model.Documento
 import cl.duoc.myapplication.model.TipoFirma
@@ -45,6 +50,7 @@ import cl.duoc.myapplication.ui.components.CustomButton
 import cl.duoc.myapplication.ui.components.CustomRadioGroup
 import cl.duoc.myapplication.ui.components.CustomTextField
 import cl.duoc.myapplication.viewmodel.NewProcedureViewModel
+import java.io.File
 
 @Composable
 fun NewProcedureScreen(
@@ -56,7 +62,6 @@ fun NewProcedureScreen(
     val state = viewModel.uiState
     val context = LocalContext.current
 
-    // Selector de archivos del sistema: no necesita permisos de almacenamiento
     val selectorDeDocumentos = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenMultipleDocuments()
     ) { uris ->
@@ -66,7 +71,27 @@ fun NewProcedureScreen(
         viewModel.onDocumentosSeleccionados(documentos)
     }
 
-    // Cuando el formulario es válido, se pasa a la pantalla de firma que corresponde
+    // Ruta de la foto que se está tomando, para usarla cuando la cámara responde
+    var fotoPendiente by rememberSaveable { mutableStateOf<String?>(null) }
+
+    // Cámara del sistema: guarda la foto en el archivo que le pasamos
+    val camara = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { fotoTomada ->
+        val ruta = fotoPendiente
+        if (ruta != null) {
+            val archivo = File(ruta)
+            if (fotoTomada) {
+                viewModel.onDocumentosSeleccionados(
+                    listOf(Documento(uri = obtenerUriDeFoto(context, archivo).toString(), nombre = archivo.name))
+                )
+            } else {
+                archivo.delete() // El usuario canceló: no dejamos un archivo vacío
+            }
+        }
+        fotoPendiente = null
+    }
+
     LaunchedEffect(state.listoParaFirmar) {
         if (state.listoParaFirmar) {
             viewModel.onFirmaIniciada()
@@ -94,7 +119,6 @@ fun NewProcedureScreen(
                 onOptionSelected = { viewModel.onTipoPersonaChange(it) }
             )
 
-            // Los campos cambian (con animación) según el tipo de persona
             AnimatedContent(
                 targetState = state.tipoPersona,
                 label = "camposSegunTipoPersona"
@@ -175,7 +199,7 @@ fun NewProcedureScreen(
             )
 
             Text(
-                text = "Adjunta la hoja del trámite (PDF o imagen). Usa solo documentos de prueba, sin datos reales.",
+                text = "Adjunta o fotografía la hoja del trámite. Usa solo documentos de prueba, sin datos reales.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -183,6 +207,16 @@ fun NewProcedureScreen(
             CustomButton(
                 text = "Adjuntar documentos",
                 onClick = { selectorDeDocumentos.launch(arrayOf("application/pdf", "image/*")) },
+                type = ButtonType.SECONDARY
+            )
+
+            CustomButton(
+                text = "Tomar foto",
+                onClick = {
+                    val archivo = crearArchivoDeFoto(context)
+                    fotoPendiente = archivo.absolutePath
+                    camara.launch(obtenerUriDeFoto(context, archivo))
+                },
                 type = ButtonType.SECONDARY
             )
 
@@ -242,7 +276,6 @@ fun NewProcedureScreen(
     }
 }
 
-// Obtiene el nombre del archivo elegido a partir de su uri
 private fun obtenerNombreArchivo(context: Context, uri: Uri): String {
     context.contentResolver.query(
         uri,
@@ -257,4 +290,15 @@ private fun obtenerNombreArchivo(context: Context, uri: Uri): String {
         }
     }
     return "Documento"
+}
+
+// Crea el archivo vacío donde la cámara va a guardar la foto
+private fun crearArchivoDeFoto(context: Context): File {
+    val carpeta = File(context.filesDir, "fotos").apply { mkdirs() }
+    return File(carpeta, "foto_tramite_${System.currentTimeMillis()}.jpg")
+}
+
+// Uri segura (FileProvider) para que la cámara pueda escribir en nuestro archivo
+private fun obtenerUriDeFoto(context: Context, archivo: File): Uri {
+    return FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", archivo)
 }

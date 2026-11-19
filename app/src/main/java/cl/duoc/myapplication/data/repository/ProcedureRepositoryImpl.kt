@@ -11,8 +11,6 @@ import java.util.UUID
 
 class ProcedureRepositoryImpl : ProcedureRepository {
 
-    // Simulamos la base de datos de trámites.
-    // La hacemos 'companion object' para que los datos persistan mientras la app esté abierta.
     companion object {
         private val tramitesDb = mutableListOf<Procedure>(
             Procedure(
@@ -77,28 +75,28 @@ class ProcedureRepositoryImpl : ProcedureRepository {
         documentos: List<Documento>,
         mecanismoFirma: String
     ): Result<Procedure> {
-        delay(2000) // Simulamos que el trámite se está procesando en el servidor
+        delay(2000)
 
         val nuevoTramite = Procedure(
-            id = UUID.randomUUID().toString(), // Genera un ID único
+            id = UUID.randomUUID().toString(),
             rut = rut,
             nombreCompleto = nombreCompleto,
             tipoPersona = tipoPersona,
             tipoFirma = tipoFirma,
             estado = ProcedureStatus.PENDIENTE, // Todo trámite nuevo empieza pendiente
-            fechaCreacion = "Hoy", // En una app real usarías LocalDate.now()
+            fechaCreacion = "Hoy",
             direccion = direccion,
             representante = representante,
             documentos = documentos,
             mecanismoFirma = mecanismoFirma
         )
 
-        tramitesDb.add(0, nuevoTramite) // Lo agregamos al inicio de la lista
+        tramitesDb.add(0, nuevoTramite)
         return Result.success(nuevoTramite)
     }
 
     override suspend fun getProcedures(): Result<List<Procedure>> {
-        delay(1000) // Simulamos tiempo de carga
-        return Result.success(tramitesDb.toList()) // Devolvemos una copia de la lista
+        delay(1000)
+        return Result.success(tramitesDb.toList())
     }
 }
