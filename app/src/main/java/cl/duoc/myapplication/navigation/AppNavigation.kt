@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cl.duoc.myapplication.model.TipoFirma
 import cl.duoc.myapplication.ui.screen.AdvancedSignatureScreen
+import cl.duoc.myapplication.ui.screen.ForgotPasswordScreen
 import cl.duoc.myapplication.ui.screen.SimpleSignatureScreen
 import cl.duoc.myapplication.ui.screen.LoginScreen
 import cl.duoc.myapplication.ui.screen.NewProcedureScreen
@@ -28,6 +29,7 @@ object Routes {
     const val MAIN_MENU = "main_menu"
     const val LOGIN = "login"
     const val REGISTER = "register"
+    const val FORGOT_PASSWORD = "forgot_password"
     const val NEW_PROCEDURE = "new_procedure"
     const val STATUS = "status"
     const val OLD_STATUS = "old_status"
@@ -97,7 +99,14 @@ fun appNavigation() {
             LoginScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToRegisterScreen = { navController.navigate(Routes.REGISTER) },
+                onNavigateToForgotPassword = { navController.navigate(Routes.FORGOT_PASSWORD) },
                 onLoginSuccess = { navController.popBackStack(Routes.MAIN_MENU, inclusive = false) }
+            )
+        }
+
+        composable(Routes.FORGOT_PASSWORD) {
+            ForgotPasswordScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
 
@@ -123,6 +132,7 @@ fun appNavigation() {
         }
 
         composable(Routes.SIMPLE_SIGNATURE) { backStackEntry ->
+            // Se comparte el ViewModel del formulario para usar sus datos al crear el trámite
             val procedureViewModel: NewProcedureViewModel = viewModel(
                 viewModelStoreOwner = remember(backStackEntry) {
                     navController.getBackStackEntry(Routes.NEW_PROCEDURE)

@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class UsuarioEntity(
     @PrimaryKey val correo: String,
     val password: String,
-    val logueado: Boolean = false // true = la sesión sigue abierta
+    val logueado: Boolean = false, // true = la sesión sigue abierta
+    val token: String = "" // authToken que entrega Xano al iniciar sesión
 )

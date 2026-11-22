@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [UsuarioEntity::class], version = 1)
+@Database(entities = [UsuarioEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun usuarioDao(): UsuarioDao
@@ -21,7 +21,10 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "notariax_db"
-                ).build()
+                )
+                    // La tabla solo guarda la sesión, así que al subir de versión se recrea
+                    .fallbackToDestructiveMigration()
+                    .build()
             }
             return instancia!!
         }

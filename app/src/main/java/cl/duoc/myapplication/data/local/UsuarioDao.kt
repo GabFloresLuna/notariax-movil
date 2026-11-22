@@ -18,7 +18,7 @@ interface UsuarioDao {
     @Query("SELECT * FROM usuarios WHERE logueado = 1 LIMIT 1")
     suspend fun obtenerLogueado(): UsuarioEntity?
 
-    // Cierra la sesión de todos los usuarios
-    @Query("UPDATE usuarios SET logueado = 0")
+    // Cierra la sesión de todos los usuarios y borra el token guardado
+    @Query("UPDATE usuarios SET logueado = 0, token = ''")
     suspend fun cerrarSesion()
 }
