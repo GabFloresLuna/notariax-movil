@@ -8,7 +8,7 @@ object Validators {
     private val formatoRut = Regex("^\\d{7,8}[0-9K]$")
     private val formatoCorreo = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
 
-    private const val LARGO_MINIMO_PASSWORD = 6
+    private const val LARGO_MINIMO_PASSWORD = 8
     private const val LARGO_MINIMO_RAZON_SOCIAL = 2
     private const val LARGO_MINIMO_DIRECCION = 5
 

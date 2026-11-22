@@ -24,7 +24,7 @@ interface AuthRepository {
         password: String
     ): Result<Unit>
 
-    //simulación de recuperación de contraseña
+    // Solicita la recuperación de contraseña a Xano (POST auth/recover)
     suspend fun recoverPassword(correo: String): Result<Unit>
 
     // Devuelve el correo del usuario con sesión abierta, o null si no hay nadie

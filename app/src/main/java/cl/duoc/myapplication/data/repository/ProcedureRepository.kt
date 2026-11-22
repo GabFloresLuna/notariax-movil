@@ -24,4 +24,9 @@ interface ProcedureRepository {
      * Obtiene la lista de todos los trámites del usuario (para el historial).
      */
     suspend fun getProcedures(): Result<List<Procedure>>
+
+    /**
+     * Obtiene un solo trámite del usuario por su id.
+     */
+    suspend fun getProcedure(id: String): Result<Procedure>
 }

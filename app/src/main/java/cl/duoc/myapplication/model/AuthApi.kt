@@ -19,3 +19,23 @@ data class SignupRequest(
 data class AuthResponse(
     val authToken: String
 )
+
+// Cuerpo que se envía a POST /auth/recover
+data class RecoverRequest(
+    val email: String
+)
+
+// Respuesta de POST /auth/recover: un mensaje de confirmación
+data class RecoverResponse(
+    val mensaje: String?
+)
+
+// Respuesta de GET /auth/me: datos del usuario dueño del token
+data class MeResponse(
+    val email: String?
+)
+
+// Cuerpo de error que devuelve Xano (por ejemplo en un 400)
+data class ApiError(
+    val message: String?
+)
